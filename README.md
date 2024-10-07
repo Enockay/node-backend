@@ -1,2 +1,2 @@
-# node-backend
-this is the updated blackie-networks node-server
+# Backend
+backend-server for Blackie-Networks

@@ -1,0 +1,14 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+.box{
+  border: 1px solid blue;
+  max-height: 70vh;
+  max-width: 80vh;
+  background-color: #00B7FF;
+}

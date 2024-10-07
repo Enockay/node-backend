@@ -1,0 +1,10 @@
+put http://localhost:3000/update/update-packages
+
+###
+GET  http://localhost:3000/update/transaction?phoneNumber=254796869402
+
+###
+POST  http://localhost:3000/whatssap
+
+###
+GET http://localhost:3000/router

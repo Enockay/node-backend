@@ -1,0 +1,28 @@
+###
+GET http://localhost:3000/api/data
+
+###
+POST http://localhost:3000/api/makePayment
+Content-Type: application/json
+
+{
+   "phoneNumber" : "254796869402",
+    "Amount" : "15",
+    "timeUnit" : "30-min"
+}
+
+###
+POST https://blackie-net-01633004af9c.herokuapp.com/api/makePayment
+Content-Type: application/json
+
+{
+    "phoneNumber" : "254796869402",
+    "Amount" : "10",
+    "timeUnit" : "30-min"
+}
+
+###
+GET http://localhost:3000/items
+
+### 
+GET http://localhost:3000/deleteItems/254796869402

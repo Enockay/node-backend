@@ -39,6 +39,8 @@ import queryItems from './public/javascripts/unusedTokens.js';
 import { deleteItems } from './public/javascripts/unusedTokens.js';
 import Update from './routes/data.js';
 import whatsapp from "./routes/test.js";
+import phoneNumber from "./routes/phoneNumbers.js";
+
 const sessionSecret = crypto.randomBytes(32).toString('hex');
 //import router from './routes/Hotspot.js';
 
@@ -90,6 +92,8 @@ app.post("/login/Api",userLoginRoute);
 app.post("/api/jwt", jwt);
 app.use('/update',Update);
 app.use("/whatssap",whatsapp);
+app.use("/phone",phoneNumber);
+
 //app.use("/router",router);
 
 app.use('/', indexRouter);

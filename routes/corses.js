@@ -1,9 +1,8 @@
-
 import cors from "cors";
 
 const allowedOrigins = [
   'http://127.0.0.1:5500',
-   'http://127.0.0.1:5501',
+  'http://127.0.0.1:5501',
   'https://admin-blackie-y3kg.vercel.app',
   'http://localhost:5173',
   'http://blackienetworks.com',
@@ -24,10 +23,10 @@ const corsOptions = () => {
       // Reject requests from other origins
       return callback(new Error('Not allowed by CORS'));
     },
-    methods: ['POST'], // You can add other methods if necessary
-    optionsSuccessStatus: 204,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // Allow all necessary methods
+    optionsSuccessStatus: 204, // For successful OPTIONS requests
   };
 };
 
-
 export default corsOptions;
+

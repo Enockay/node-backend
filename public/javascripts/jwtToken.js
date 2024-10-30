@@ -19,6 +19,10 @@ const tokenSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    TransactionCode: {
+      type: String,
+      required: true,
+    },
     token: {
       type: String,
       required: true,
@@ -50,7 +54,7 @@ tokenSchema.virtual('formatted_time_remaining').get(function () {
 const Token = mongoose.model('Tokens', tokenSchema);
 
 // Function to generate a JWT token and store it in the database
-const generateToken = async (mac, ip, phone, timeunit, amount) => {
+const generateToken = async (mac, ip, phone, timeunit, amount,Code) => {
   const secretKey = 'aOpJFUXdhe4Nt5i5RAKzbuStAPCLK5joDSqqUlfdtZg=';
   
   const { value, unit } = timeunit;
@@ -76,6 +80,7 @@ const generateToken = async (mac, ip, phone, timeunit, amount) => {
     phoneNumber: phone,
     timeStamp: Math.floor(Date.now() / 1000),
     expire: expireTime,
+    TransactionCode:Code,
     mac: mac,
     ipAddress: ip,
   };

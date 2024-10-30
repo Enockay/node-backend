@@ -23,7 +23,7 @@ const handleSafaricomCallback = async (body) => {
             await transactions(allocatedTime,amountPaid,phoneNumber,TransactionCode);
             const mac = "10.xxx.xxx";
             const ip = "192.100.104"
-            await generateToken(mac, ip, phoneNumber, allocatedTime, amountPaid);
+            await generateToken(mac, ip, phoneNumber, allocatedTime, amountPaid,TransactionCode);
             status = 'Payment Successful';
         }
 

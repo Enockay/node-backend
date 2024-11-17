@@ -8,6 +8,7 @@ jwt.post('/api/jwt', async (req, res) => {
     try {
         const phone_number = req.body.phoneNumber;
         const mac = req.body.mac;
+        console.log(mac , phone_number);
 
         const {responseState, remainingTime,TransactionCode } = await checkUserLogin(phone_number, mac);
 

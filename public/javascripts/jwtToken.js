@@ -61,17 +61,17 @@ const generateToken = async (mac, ip, phone, timeunit, amount,Code) => {
 
   let timeInSeconds;
 
-  if (unit === 'day' && amount >= 35 || unit === 'days' && amount >= 35) {
-    timeInSeconds = value * 24 * 60 * 60; // Convert days to seconds
-  } else if (unit === 'hour' && (amount >= 10 && amount <= 35)) {
-    timeInSeconds = value * 60 * 60; // Convert hours to seconds
-  } else if (unit === 'min' && amount === 5) {
-    timeInSeconds = value * 60; // Convert minutes to seconds
-  } else if (unit === 'month' && amount >= 400) {
-    timeInSeconds = value * 30 * 24 * 60 * 60; // Convert months to seconds (approx. 30 days)
-  } else {
-    timeInSeconds = value * 60; // Default to minutes if no matching unit/amount condition is met
-  }
+if (unit === 'day' || unit === 'days') {
+  timeInSeconds = value * 24 * 60 * 60; // Convert days to seconds
+} else if (unit === 'hour') {
+  timeInSeconds = value * 60 * 60; // Convert hours to seconds
+} else if (unit === 'min') {
+  timeInSeconds = value * 60; // Convert minutes to seconds
+} else if (unit === 'month') {
+  timeInSeconds = value * 30 * 24 * 60 * 60; // Convert months to seconds (approx. 30 days)
+} else {
+  timeInSeconds = value * 60; // Default to minutes if no matching unit condition is met
+}
 
   const expireInMilliseconds = timeInSeconds * 1000;
   const expireTime = new Date(Date.now() + expireInMilliseconds);

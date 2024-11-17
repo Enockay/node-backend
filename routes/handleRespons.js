@@ -10,8 +10,8 @@ safaricomRoute.post('/api/callback', async (req, res) => {
 
         const result = await callback(req.body);
 
-        const { checkoutRequestID, status } = result.data;
-        notifyClient(checkoutRequestID, status);
+        const { checkoutRequestID, status,Code } = result.data;
+        notifyClient(checkoutRequestID, status,Code);
 
         res.status(200).json({ success: true, message: "Received callback from Safaricom" });
     } catch (error) {

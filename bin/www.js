@@ -61,11 +61,11 @@ server.on('upgrade', (request, socket, head) => {
 });
 
 // Notify client function to send payment status updates
-export function notifyClient(checkoutRequestID, status) {
+export function notifyClient(checkoutRequestID, status,Code) {
   if (clients.has(checkoutRequestID)) {
     const ws = clients.get(checkoutRequestID);
-    ws.send(JSON.stringify({ checkoutRequestID, status })); // Send the status to the client
+    ws.send(JSON.stringify({ checkoutRequestID, status,Code })); // Send the status to the client
   } else {
-    console.log('Notify triggered but no client found', checkoutRequestID, "status", status);
+    console.log('Notify triggered but no client found', checkoutRequestID, "status", status,"code",Code);
   }
 }

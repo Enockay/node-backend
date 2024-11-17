@@ -10,13 +10,14 @@ const handleSafaricomCallback = async (body) => {
         //console.log('ResultCode', ResultCode, 'CheckoutRequestID', CheckoutRequestID);
 
         let status = ResultDesc;
-
+        let Code;
         if (ResultCode === 0) {
             // Payment was successful
             const TransactionCode = findValueInMetadata(CallbackMetadata.Item, 'MpesaReceiptNumber');
             const amountPaid = findValueInMetadata(CallbackMetadata.Item, 'Amount');
             const  phoneNumber = findValueInMetadata(CallbackMetadata.Item,'PhoneNumber');
             const allocatedTime = await time1;
+            Code = TransactionCode;
 
             // Log the extracted information for debugging
            // console.log('Order ID:', orderId, 'Amount Paid:', amountPaid, 'Allocated Time:', allocatedTime);
@@ -27,7 +28,7 @@ const handleSafaricomCallback = async (body) => {
             status = 'Payment Successful';
         }
 
-        return { success: ResultCode === 0, data: { checkoutRequestID: CheckoutRequestID, status } };
+        return { success: ResultCode === 0, data: { checkoutRequestID: CheckoutRequestID, status,Code } };
     } catch (error) {
         console.error("Error occurred in manipulating response", error);
         return { success: false, data: { checkoutRequestID: null, status: 'Error' } };

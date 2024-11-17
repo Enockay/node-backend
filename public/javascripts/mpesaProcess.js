@@ -1,7 +1,5 @@
-import fetch from 'node-fetch';
-import generateToken from './jwtToken.js';
-
-let isRequestInProgress = false;
+import axios from "axios";
+import moment from "moment";
 
 const consumerKey = 'YPxsS3S68mQLxEaTAzH1PbG6qt03dYXi';
 const consumerSecretKey = 'UdkVoWW4oqCqgmQI';
@@ -10,81 +8,68 @@ const lipaNaMpesaOnlinePassKey = '4b55ed5145cd2f614dbdf71743f5c5f84ca6574a824f1b
 const lipaNaMpesaOnlineCallBackUrl = 'https://node-blackie-networks.fly.dev/api/callback';
 const Party2B = '4086382';
 
-async function getToken() {
-  const url = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
-  const auth = Buffer.from(`${consumerKey}:${consumerSecretKey}`).toString('base64');
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Authorization: `Basic ${auth}`,
-    },
-  });
-
-  const data = await response.json();
-
-  if (!data.access_token) {
-    throw new Error('Failed to access Token');
-  }
-
-  return data.access_token;
-}
-
-async function lipaNaMpesaOnline(phoneNumber, amount, orderId) {
-  if (isRequestInProgress) {
-    throw new Error('Another request is already in progress');
-  }
-
-  isRequestInProgress = true;
+async function getAccessToken() {
+  const url = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
+  const auth = "Basic " + Buffer.from(`${consumerKey}:${consumerSecretKey}`).toString("base64");
 
   try {
-    const accessToken = await getToken();
-    const timestamp = generateTimestamp();
+    const response = await axios.get(url, {
+      headers: { Authorization: auth },
+    });
+    return response.data.access_token;
+  } catch (error) {
+    console.error("Error fetching access token:", error.message);
+    throw new Error("Failed to retrieve access token.");
+  }
+}
 
-    const url = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
-    const password = Buffer.from(`${lipaNaMpesaOnlineShortCode}${lipaNaMpesaOnlinePassKey}${timestamp}`).toString('base64');
+async function lipaNaMpesaOnline(phoneNumber, amount, orderID) {
+  try {
+    // Format phone number
+    if (phoneNumber.startsWith("0")) {
+      phoneNumber = "254" + phoneNumber.slice(1);
+    }
 
-    const payLoad = {
+    // Get access token
+    const accessToken = await getAccessToken();
+    const authHeader = `Bearer ${accessToken}`;
+
+    // Prepare STK push data
+    const timestamp = moment().format("YYYYMMDDHHmmss");
+    const password = Buffer.from(
+      `${lipaNaMpesaOnlineShortCode}${lipaNaMpesaOnlinePassKey}${timestamp}`
+    ).toString("base64");
+
+    const requestData = {
       BusinessShortCode: lipaNaMpesaOnlineShortCode,
-      Timestamp: timestamp,
       Password: password,
-      TransactionType: 'CustomerBuyGoodsOnline',
+      Timestamp: timestamp,
+      TransactionType: "CustomerBuyGoodsOnline",
       Amount: amount,
       PartyA: phoneNumber,
       PartyB: Party2B,
       PhoneNumber: phoneNumber,
       CallBackURL: lipaNaMpesaOnlineCallBackUrl,
-      AccountReference: orderId,
-      TransactionDesc: 'Payment for your order',
+      AccountReference: orderID,
+      TransactionDesc: "Payment for order " + orderID,
     };
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payLoad),
+    // Send STK push request
+    const url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
+    const response = await axios.post(url, requestData, {
+      headers: { Authorization: authHeader },
     });
 
-    const data = await response.json();
-
-    return data;
-  } finally {
-    isRequestInProgress = false;
+    return response.data;
+  } catch (error) {
+    console.error("STK Push failed:", error.message);
+    return {
+      success: false,
+      message: "Request failed.",
+      error: error.message,
+    };
   }
 }
 
-function generateTimestamp() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = (`0${now.getMonth() + 1}`).slice(-2);
-  const day = (`0${now.getDate()}`).slice(-2);
-  const hours = (`0${now.getHours()}`).slice(-2);
-  const minutes = (`0${now.getMinutes()}`).slice(-2);
-  const seconds = (`0${now.getSeconds()}`).slice(-2);
-
-  return `${year}${month}${day}${hours}${minutes}${seconds}`;
-}
 
 export default lipaNaMpesaOnline;

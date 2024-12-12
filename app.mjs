@@ -40,6 +40,9 @@ import { deleteItems } from './public/javascripts/unusedTokens.js';
 import Update from './routes/data.js';
 import whatsapp from "./routes/test.js";
 import phoneNumber from "./routes/phoneNumbers.js";
+import sms from "./routes/Sms.js";
+import contacts from "./routes/contacts.js";
+import disconnect from './routes/disconnect.js';
 
 const sessionSecret = crypto.randomBytes(32).toString('hex');
 //import router from './routes/Hotspot.js';
@@ -93,6 +96,9 @@ app.post("/api/jwt", jwt);
 app.use('/update',Update);
 app.use("/whatssap",whatsapp);
 app.use("/phone",phoneNumber);
+app.use("/sms",sms);
+app.use("/cvs",contacts);
+app.use("/disconnect",disconnect);
 
 //app.use("/router",router);
 
